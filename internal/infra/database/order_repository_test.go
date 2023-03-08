@@ -7,7 +7,7 @@ import (
 	"github.com/devfulcycle/gointensivo2/internal/entity"
 	"github.com/stretchr/testify/suite"
 
-	//sqlute3 driver
+	// sqlite3 driver
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -19,7 +19,7 @@ type OrderRepositoryTestSuite struct {
 func (suite *OrderRepositoryTestSuite) SetupSuite() {
 	db, err := sql.Open("sqlite3", ":memory:")
 	suite.NoError(err)
-	db.Exec("CREATE TABLE orders (id VARCHAR(255) NOT NULL, price FLOAT NOT NULL, tax FLOAT NOT NULL, final_price FLOAT NIT NULL, PRIMARY KEY(id) )")
+	db.Exec("CREATE TABLE orders (id varchar(255) NOT NULL, price float NOT NULL, tax float NOT NULL, final_price float NOT NULL, PRIMARY KEY (id))")
 	suite.Db = db
 }
 
@@ -31,16 +31,16 @@ func TestSuite(t *testing.T) {
 	suite.Run(t, new(OrderRepositoryTestSuite))
 }
 
-func (suite *OrderRepositoryTestSuite) Test_Saving_Order() {
-	order, err := entity.NewOrder("123", 10, 2)
+func (suite *OrderRepositoryTestSuite) TestSavingOrder() {
+	order, err := entity.NewOrder("123", 10.0, 1.0)
 	suite.NoError(err)
-	suite.NoError(order.CalculatFinalPrice())
+	suite.NoError(order.CalculateFinalPrice())
 	repo := NewOrderRepository(suite.Db)
 	err = repo.Save(order)
 	suite.NoError(err)
 
 	var orderResult entity.Order
-	err = suite.Db.QueryRow("SELECT id, price, tax, final_price FROM orders WHERE id = ?",
+	err = suite.Db.QueryRow("select id, price, tax, final_price from orders where id = ?",
 		order.ID).Scan(&orderResult.ID, &orderResult.Price, &orderResult.Tax, &orderResult.FinalPrice)
 
 	suite.NoError(err)

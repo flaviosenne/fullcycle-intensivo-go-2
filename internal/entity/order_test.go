@@ -24,6 +24,6 @@ func Test_With_All_Valid_Params(t *testing.T) {
 	assert.NoError(t, order.Validate())
 	assert.Equal(t, 10.0, order.Price)
 	assert.Equal(t, 2.0, order.Tax)
-	order.CalculatFinalPrice()
+	order.CalculateFinalPrice()
 	assert.Equal(t, 20.0, order.FinalPrice)
 }
